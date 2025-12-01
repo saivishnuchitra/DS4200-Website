@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizations | DS4200 Project</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #0d0d0d;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+        :root {
+            --primary-orange: #ff6b35;
+            --dark-surface: #1a1a1a;
+            --border-color: #333;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px 40px; }
+        
+        nav {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand { font-weight: bold; color: #fff; font-size: 1.2rem; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: #888; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-orange); }
+
+        .viz-section {
+            background-color: var(--dark-surface);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            margin-bottom: 50px;
+            border-radius: 4px;
+        }
+
+        .viz-header { margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .viz-header h2 { color: var(--primary-orange); font-weight: 300; font-size: 1.8rem; }
+
+        .chart-container {
+            background-color: #fff; 
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 600px; 
+            border: none;
+            display: block;
+        }
+
+       .viz-analysis {
+            display: block;
+            width: 100%;
+            margin-top: 25px;
+        }
+        .analysis-box h3 { color: #fff; font-size: 1rem; margin-bottom: 10px; border-left: 3px solid var(--primary-orange); padding-left: 10px; }
+        .analysis-box p { font-size: 0.95rem; color: #bbb; text-align: justify; }
+
+        footer { text-align: center; margin-top: 50px; font-size: 0.8rem; color: #666; border-top: 1px solid var(--border-color); padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <div class="nav-brand">DS4200 Group Project</div>
+            <div class="nav-links">
+                <a href="index.html">Proposal</a>
+                <a href="team.html">Team</a>
+                <a href="visualizations.html" class="active">Visualizations</a>
+            </div>
+        </nav>
+
+        <header style="margin-bottom: 40px;">
+            <h1 style="color: var(--primary-orange); font-weight: 300; font-size: 2.5rem;">Data Visualizations</h1>
+            <p style="color: #888;">Exploring the relationship between aging, brain structure, and dementia.</p>
+        </header>
+
+        <main>
+            <!-- ====================================================== -->
+            <!-- VIZ 1: SCATTERPLOT (Age vs nWBV) -->
+            <!-- ====================================================== -->
+            <section class="viz-section">
+                <div class="viz-header">
+                    <h2>1. Brain Volume vs. Age by Dementia Status</h2>
+                </div>
+                <div class="chart-container" id="viz1"></div>
+                <div class="viz-analysis">
+                    <div class="analysis-box">
+                        <h3>Takeaway</h3>
+                        <p>
+                            The plot shows that brain volume declines with age for both groups, but the slope for the dementia group is steeper, indicating a faster rate of brain atrophy. Across nearly all ages, individuals with dementia tend to have lower normalized whole-brain volume than age-matched individuals without dementia. The overlap between groups increases at older ages, but the separation in regression lines demonstrates that dementia is associated with both a lower baseline brain volume and a more pronounced decline over time.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================== -->
+            <!-- VIZ 2: SCATTERPLOT (nWBV vs MMSE) -->
+            <!-- ====================================================== -->
+            <section class="viz-section">
+                <div class="viz-header">
+                    <h2>2. Brain Volume vs. Cognitive Function</h2>
+                </div>
+                <div class="chart-container" id="viz2"></div>
+                <div class="viz-analysis">
+                    <div class="analysis-box">
+                        <h3>Takeaway</h3>
+                        <p>
+                            The visualization shows that individuals without dementia cluster tightly at very high MMSE scores (mostly 28–30) regardless of brain volume, and their regression line is nearly flat, indicating minimal relationship between nWBV and cognitive score within this group. In contrast, the dementia group shows much greater variability in MMSE and a clear positive relationship: lower brain volume is associated with lower cognitive performance. This suggests that brain atrophy is more strongly tied to cognitive decline among those who already have dementia.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+             <!-- ====================================================== -->
+            <!-- VIZ 3: BAR CHART (Age Distribution) -->
+            <!-- ====================================================== -->
+            <section class="viz-section">
+                <div class="viz-header">
+                    <h2>3. Age Distribution of Study</h2>
+                </div>
+                <div class="chart-container" id="viz3"></div>
+                <div class="viz-analysis">
+                    <div class="analysis-box">
+                        <h3>Takeaway</h3>
+                        <p>
+                             The plot shows that people without dementia tend to be younger, while people with dementia are mostly older. This matters because age is one of the biggest risk factors for dementia. Seeing the two age groups side-by-side helps show that the dataset follows a real-world pattern where dementia becomes more common as people get older.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================== -->
+            <!-- VIZ 4: Brain Volume by Cognitive Status -->
+            <!-- ====================================================== -->
+            <section class="viz-section">
+                <div class="viz-header">
+                    <h2>4. Brain Volume by Cognitive Status</h2>
+                </div>
+                <div class="chart-container" id="viz4"></div>
+                <div class="viz-analysis">
+                    <div class="analysis-box">
+                        <h3>Takeaway</h3>
+                        <p>
+                        The plot shows that people with dementia have lower brain volume on average, and their values tend to cluster lower than the non-dementia group. This is important because it gives a clear visual connection between dementia and brain atrophy. It also supports what we know from neuroscience: as dementia develops, brain tissue shrinks, and this shows up as lower nWBV.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================== -->
+            <!-- VIZ 5: Brain Volume Across Age Groups by Cognitive Status -->
+            <!-- ====================================================== -->
+            <section class="viz-section">
+                <div class="viz-header">
+                    <h2>5. Brain Volume Across Age Groups by Cognitive Status</h2>
+                </div>
+                <div class="chart-container" id="viz5"></div>
+                <div class="viz-analysis">
+                    <div class="analysis-box">
+                        <h3>Takeaway</h3>
+                        <p>
+                            This chart shows how brain volume changes with age and cognitive status. The age groups are split into five ranges, and each box shows the spread of brain volume (nWBV) for people in that group. As the age groups go up, brain volume drops, which matches what we expect with normal aging. The chart also shows that people with dementia usually have lower brain volume than people without dementia in the same age group. This makes it easy to see how age and dementia work together to affect brain structure.                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================== -->
+            <!-- VIZ 6: D3 HEATMAP -->
+            <!-- ====================================================== -->
+            <section class="viz-section">
+                <div class="viz-header">
+                    <h2>6. Correlation Heatmap (D3)</h2>
+                </div>
+                <div class="chart-container" style="background-color: transparent; padding: 0;">
+                    <iframe src="corr_heatmap.html" title="D3 Heatmap"></iframe>
+                </div>
+                <div class="viz-analysis">
+                    <div class="analysis-box">
+                        <h3>Takeaway</h3>
+                        <p>
+                            The heatmap reveals a strong, consistent negative correlation (deep blue) between Age and Normalized Whole Brain Volume (nWBV) across all groups, confirming that brain atrophy is a universal factor of aging regardless of dementia status. Conversely, Socioeconomic Status (SES) and Education Level show a strong positive correlation (orange). When comparing subgroups, the relationship between cognitive scores (MMSE) and brain volume appears more pronounced in the Demented group.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Wali Qureshi, Gianni Diarbi and Sai Vishnu Chitra | Northeastern University</p>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+        vegaEmbed('#viz1', 'viz1.json').catch(console.error);
+        vegaEmbed('#viz2', 'viz2.json').catch(console.error);
+        vegaEmbed('#viz3', 'viz3.json').catch(console.error);
+        vegaEmbed('#viz4', 'viz4.json').catch(console.error);
+        vegaEmbed('#viz5', 'viz5.json').catch(console.error);
+    </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About the Team | DS4200 Project</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #0d0d0d;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+        :root {
+            --primary-orange: #ff6b35;
+            --dark-surface: #1a1a1a;
+            --border-color: #333;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px 40px; }
+        
+        a { color: var(--primary-orange); text-decoration: none; transition: 0.3s; }
+        a:hover { color: #fff; }
+        h1 { color: var(--primary-orange); font-weight: 300; font-size: 2.5rem; margin-bottom: 30px; }
+        h3 { color: #fff; margin-bottom: 10px; }
+        
+        nav {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand { font-weight: bold; color: #fff; font-size: 1.2rem; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: #888; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-orange); }
+
+        .team-intro {
+            text-align: center;
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #bbb;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .team-card {
+            background-color: var(--dark-surface);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column; 
+            height: 100%;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-orange);
+        }
+
+        .profile-img-placeholder {
+            width: 150px;
+            height: 150px;
+            background-color: #333;
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 0.8rem;
+            border: 2px solid var(--primary-orange);
+            overflow: hidden; 
+        }
+
+        .profile-img-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top; /* Ensures heads aren't cut off if images are tall */
+        }
+
+        .role {
+            color: var(--primary-orange);
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bio {
+            font-size: 0.9rem;
+            color: #999;
+            flex-grow: 1; 
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <div class="nav-brand">DS4200 Group Project</div>
+            <div class="nav-links">
+                <a href="index.html">Proposal</a>
+                <a href="team.html" class="active">Team</a>
+                <a href="visualizations.html">Visualizations</a>
+            </div>
+        </nav>
+
+        <main>
+            <div class="team-intro">
+                <h1>Meet the Team</h1>
+                <p>We are students at Northeastern University exploring Data Visualization. All group members collaborate equally on every part of the project, including data cleaning, preprocessing, and analysis.</p>
+            </div>
+
+            <div class="team-grid">
+                
+                <div class="team-card">
+                    <div class="profile-img-placeholder">
+                        <img src="wali.jpg" alt="Wali Qureshi">
+                    </div>
+                    <h3>Wali Qureshi</h3>
+                    <div class="role">Data Analyst</div>
+                    <p class="bio">
+                        Wali Qureshi is a student of data science who specializes in statistical analysis and backend programming. He is an expert in the technological architecture underlying intricate visualizations and is passionate about guaranteeing data accuracy and integrity.
+                    </p>
+                </div>
+
+                <div class="team-card">
+                    <div class="profile-img-placeholder">
+                        <img src="gianni.jpg" alt="Gianni Diarbi">
+                    </div>
+                    <h3>Gianni Diarbi</h3>
+                    <div class="role">Design Analyst</div>
+                    <p class="bio">
+                        Gianni Diarbi is a Data Science and Business Analytics student with a minor in Design. With a passion for turning data into clear, impactful stories, he’s gained hands-on experience in digital marketing and project management through co-op, internships, and classwork.
+                    </p>
+                </div>
+
+                <div class="team-card">
+                    <div class="profile-img-placeholder">
+                        <img src="vishnu.jpg" alt="Sai Vishnu Chitra">
+                    </div>
+                    <h3>Sai Vishnu Chitra</h3>
+                    <div class="role">Developer</div>
+                    <p class="bio">
+                        Sai Vishnu Chitra is a Computer Science and Business Administration student with a strong focus on analytics, innovation, and practical problem-solving. He is passionate about creating data-driven solutions and is an expert at turning complicated data into understandable insights and workable plans.
+                    </p>
+                </div>
+
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Wali Qureshi, Gianni Diarbi & Sai Vishnu Chitra | Northeastern University</p>
+        </footer>
+    </div>
+
+</body>
+</html>

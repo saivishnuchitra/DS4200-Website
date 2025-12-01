@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapping the Aging Brain | DS4200 Project</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0d0d0d; 
+            color: #e0e0e0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        :root {
+            --primary-orange: #ff6b35; 
+            --dark-surface: #1a1a1a;
+            --border-color: #333;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-orange);
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 { font-size: 2.5rem; letter-spacing: -1px; }
+        h2 { font-size: 1.8rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-top: 30px; }
+        h3 { font-size: 1.2rem; color: #fff; margin-top: 20px; }
+        
+        p { margin-bottom: 15px; }
+        
+        a { color: var(--primary-orange); text-decoration: none; transition: 0.3s; }
+        a:hover { color: #fff; text-decoration: underline; }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 40px;
+        }
+
+        nav {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand { font-weight: bold; color: #fff; font-size: 1.2rem; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: #888; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-orange); text-decoration: none; }
+
+        .proposal-meta {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .image-placeholder {
+            background-color: var(--dark-surface);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: center;
+        }
+
+        .image-placeholder img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .caption {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        ul.ref-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul.ref-list li {
+            margin-bottom: 10px;
+            padding-left: 15px;
+            border-left: 2px solid var(--primary-orange);
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <div class="nav-brand">DS4200 Group Project</div>
+    <div class="nav-links">
+        <a href="index.html" class="active">Proposal</a>
+        <a href="team.html">Team</a> 
+        <a href="visualizations.html">Visualizations</a>
+    </div>
+        </nav>
+
+        <header>
+            <h1>Mapping the Aging Brain</h1>
+            <div class="proposal-meta">
+                <strong>Subtitle:</strong> MRI-Based Analysis of Cognitive and Structural Changes in Dementia<br>
+                <strong>Team:</strong> Wali Qureshi, Gianni Diarbi and Sai Vishnu Chitra<br>
+                <strong>Course:</strong> DS4200 Information Presentation and Data Visualization
+            </div>
+        </header>
+
+        <main>
+            <section id="introduction">
+                <h2>Introduction</h2>
+                <p>
+                    Our project, Mapping the Aging Brain: MRI-Based Analysis of Cognitive and Structural Changes in Dementia, focuses on understanding how the human brain evolves with age and how these changes relate to memory, thinking ability, and neurodegenerative diseases such as Alzheimer’s. Using the Open Access Series of Imaging Studies (OASIS) dataset, we analyze MRI-based measurements like brain volume alongside cognitive scores, age, education, and gender to uncover meaningful patterns across different populations.
+                </p>
+                <p>
+                    The goal of our project is to identify relationships between brain structure and cognitive decline, helping visualize how aging and dementia affect the brain over time. Our analysis involves preprocessing the data - handling missing values, normalizing MRI metrics, and encoding categorical variables - to ensure accuracy and consistency. From there, we explore trends such as the correlation between age and brain atrophy, as well as differences in cognitive performance across dementia and non-dementia groups.
+                </p>
+                <p>
+                    To bring our findings to life, we have created both static and interactive visualizations, including scatterplots, distribution graphs, and 3D brain diagrams that illustrate structural decline and its cognitive impact. Ultimately, our project aims to combine neuroscience and data analytics to make complex information about the aging brain more accessible and insightful for researchers, clinicians, and the public.
+                </p>
+            </section>
+
+            <section id="data">
+                <h2>The Data</h2>
+                <p>
+                   Our project uses data from the Open Access Series of Imaging Studies (OASIS), a publicly available MRI database developed by the Washington University Alzheimer’s Disease Research Center and collaborators at Harvard University and the Biomedical Informatics Research Network. The dataset provides high-quality brain imaging data that supports research on aging, cognition, and Alzheimer’s disease.
+                    We accessed this data via <a href="https://www.kaggle.com/datasets/jboysen/mri-and-alzheimers/data" target="_blank">Kaggle</a>.
+                </p>
+                <p>
+                    We draw from two related datasets: OASIS Cross-Sectional and OASIS Longitudinal. The cross-sectional dataset contains 416 participants aged 18 to 96, each with 3–4 MRI scans collected during a single session. It includes demographic and clinical information such as age, gender, years of education, cognitive test scores (MMSE), dementia rating (CDR), and MRI-derived brain volume measurements. The longitudinal dataset follows 150 older adults aged 60 to 96 over several years, totaling 373 imaging sessions. Participants were scanned two or more times to track structural and cognitive changes over time - some remaining nondemented, while others progressed from healthy to Alzheimer’s diagnosis.
+                </p>
+                <p>
+                    Together, these datasets provide nearly 800 total MRI sessions, offering a rich foundation for exploring how brain structure, cognition, and dementia progression are interconnected.
+                </p>
+            </section>
+
+            <section id="summary">
+                <h2>Summary</h2>
+                <p>
+                    Our project, Mapping the Aging Brain: MRI-Based Analysis of Cognitive and Structural Changes in Dementia, focuses on understanding how the human brain evolves with age and how these changes relate to memory, thinking ability, and neurodegenerative diseases such as Alzheimer’s. Using the Open Access Series of Imaging Studies (OASIS) dataset, we analyze MRI-based measurements like brain volume alongside cognitive scores, age, education, and gender to uncover meaningful patterns across different populations.
+                </p>
+                <p>
+                    The goal of our project is to identify relationships between brain structure and cognitive decline, helping visualize how aging and dementia affect the brain over time. Our analysis involves preprocessing the data - handling missing values, normalizing MRI metrics, and encoding categorical variables - to ensure accuracy and consistency. From there, we explore trends such as the correlation between age and brain atrophy, as well as differences in cognitive performance across dementia and non-dementia groups.
+                </p>
+            </section>
+
+            <section id="inspiration">
+                <h2>Inspiration</h2>
+                <div class="image-gallery">
+                    <div class="image-placeholder">
+                        <img src="brain_diagram_1.png" alt="Healthy Brain vs Alzheimer's Brain Diagram">
+                        <div class="caption">Comparison of Healthy Brain vs Alzheimer's Brain (Plaques & Tangles)</div>
+                    </div>
+                    <div class="image-placeholder">
+                        <img src="brain_diagram_2.png" alt="MRI Scan Comparison">
+                        <div class="caption">MRI Scan Comparison: Ventricle enlargement and Hippocampus shrinkage</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="references">
+                <h2>References</h2>
+                <h3>Key Literature</h3>
+                <ul class="ref-list">
+                    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2938772/" target="_blank">The clinical use of structural MRI in Alzheimer disease</a>.</li>
+                    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11591117/" target="_blank">MRI-Driven Alzheimer's Disease Diagnosis Using Deep Network Fusion and Optimal Selection of Feature</a>.</li>
+                    <li><a href="https://link.springer.com/article/10.1186/s40001-024-02172-0" target="_blank">Research on magnetic resonance imaging in diagnosis of Alzheimer's disease</a></li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Wali Qureshi, Gianni Diarbi & Sai Vishnu Chitra | Northeastern University</p>
+        </footer>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OASIS Correlation Heatmap (D3)</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 20px;
+      overflow-x: auto; 
+      background-color: white; 
+    }
+
+    .controls {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #ddd;
+      display: inline-block;
+      border-radius: 5px;
+    }
+
+    .controls label {
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 20px;
+      user-select: none;
+    }
+
+    svg {
+      display: block;
+    }
+
+    .axis text {
+      font-size: 12px; 
+      fill: #333;
+    }
+
+    .facet-title {
+      font-size: 16px; 
+      font-weight: bold;
+      text-anchor: middle;
+      fill: #000;
+    }
+
+    .cell-border {
+      stroke: #fff;
+      stroke-width: 1px;
+    }
+
+    .tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+      border: 1px solid #555;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="controls">
+    <label style="color: #2c7bb6; font-weight: bold;">
+      <input type="checkbox" id="showPos" checked> Show Positive Correlations (+r)
+    </label>
+    <label style="color: #d7191c; font-weight: bold;">
+      <input type="checkbox" id="showNeg" checked> Show Negative Correlations (-r)
+    </label>
+  </div>
+
+  <div id="chart"></div>
+  <div id="tooltip" class="tooltip" style="opacity: 0;"></div>
+
+  <script>
+    const corrVars = ["Age", "MMSE", "nWBV", "eTIV", "Educ", "SES"];
+    const csvFile = "oasis_cross-sectional.csv"; 
+
+    const facetWidth = 320; 
+    const facetHeight = 320;
+    const margin = { top: 50, right: 30, bottom: 80, left: 80 };
+    
+    const innerWidth = facetWidth - margin.left - margin.right;
+    const innerHeight = facetHeight - margin.top - margin.bottom;
+
+    // Gradient: Red (-1) -> White (0) -> Blue (1)
+    const colorScale = d3.scaleLinear()
+      .domain([-1, 0, 1])
+      .range(["#d7191c", "#f7f7f7", "#2c7bb6"]); 
+
+    const tooltip = d3.select("#tooltip");
+
+    d3.csv(csvFile, d3.autoType).then(data => {
+      
+      const allNeededCols = [...corrVars, "CDR", "M/F"];
+      const cleanData = data.filter(d => {
+        return allNeededCols.every(col => d[col] !== null && d[col] !== undefined && d[col] !== "");
+      });
+
+      const groups = [
+        { name: "All Participants", data: cleanData },
+        { name: "Nondemented", data: cleanData.filter(d => d.CDR === 0) },
+        { name: "Demented", data: cleanData.filter(d => d.CDR > 0) },
+        { name: "Male", data: cleanData.filter(d => d["M/F"] === "M") },
+        { name: "Female", data: cleanData.filter(d => d["M/F"] === "F") }
+      ];
+
+      function pearsonCorrelation(arrX, arrY) {
+        const n = arrX.length;
+        if (n === 0 || n !== arrY.length) return NaN;
+        let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
+        for (let i = 0; i < n; i++) {
+          const x = arrX[i];
+          const y = arrY[i];
+          sumX += x; sumY += y; sumXY += x * y; sumX2 += x * x; sumY2 += y * y;
+        }
+        const numerator = (n * sumXY) - (sumX * sumY);
+        const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+        if (denominator === 0) return NaN;
+        return numerator / denominator;
+      }
+
+      function getCorrData(groupData, groupName) {
+        const corrRows = [];
+        corrVars.forEach(var1 => {
+          corrVars.forEach(var2 => {
+            const filtered = groupData.filter(d => d[var1] != null && d[var2] != null);
+            const arrX = filtered.map(d => +d[var1]);
+            const arrY = filtered.map(d => +d[var2]);
+            corrRows.push({
+              Var1: var1, Var2: var2, Correlation: pearsonCorrelation(arrX, arrY), Group: groupName
+            });
+          });
+        });
+        return corrRows;
+      }
+
+      let combinedCorrData = [];
+      groups.forEach(g => {
+        combinedCorrData = combinedCorrData.concat(getCorrData(g.data, g.name));
+      });
+
+      const svgWidth = facetWidth * groups.length; 
+      const svgHeight = facetHeight;
+
+      const svg = d3.select("#chart")
+        .append("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight);
+
+      groups.forEach((g, i) => {
+        const groupName = g.name;
+        const groupData = combinedCorrData.filter(d => d.Group === groupName);
+
+        const xScale = d3.scaleBand().domain(corrVars).range([0, innerWidth]).padding(0.05);
+        const yScale = d3.scaleBand().domain(corrVars).range([0, innerHeight]).padding(0.05);
+
+        const facetG = svg.append("g")
+          .attr("transform", `translate(${i * facetWidth + margin.left},${margin.top})`);
+
+        facetG.selectAll("rect")
+          .data(groupData)
+          .join("rect")
+          .attr("class", "cell-border") 
+          .attr("x", d => xScale(d.Var1))
+          .attr("y", d => yScale(d.Var2))
+          .attr("width", xScale.bandwidth())
+          .attr("height", yScale.bandwidth())
+          .attr("fill", d => isNaN(d.Correlation) ? "#eee" : colorScale(d.Correlation))
+          .on("mousemove", (event, d) => {
+            const currentOpacity = d3.select(event.currentTarget).style("opacity");
+            if (currentOpacity < 0.5) return; 
+
+            tooltip
+              .style("opacity", 1)
+              .html(`<strong>${d.Group}</strong><br/>${d.Var1} vs ${d.Var2}<br/>r = ${d.Correlation.toFixed(3)}`)
+              .style("left", (event.pageX + 15) + "px")
+              .style("top", (event.pageY - 10) + "px");
+          })
+          .on("mouseleave", () => tooltip.style("opacity", 0));
+
+        // AXES
+        facetG.append("g")
+          .attr("class", "axis")
+          .attr("transform", `translate(0, ${innerHeight})`)
+          .call(d3.axisBottom(xScale))
+          .selectAll("text")
+          .attr("text-anchor", "end")
+          .attr("transform", "rotate(-45)")
+          .attr("dx", "-0.5em")
+          .attr("dy", "0.25em");
+
+        facetG.append("g").attr("class", "axis").call(d3.axisLeft(yScale));
+
+        svg.append("text")
+          .attr("class", "facet-title")
+          .attr("x", i * facetWidth + (facetWidth/2))
+          .attr("y", 30)
+          .text(groupName);
+      });
+
+      // --- IMPROVED LEGEND SECTION ---
+      const legendWidth = 300;
+      const legendHeight = 15;
+      
+      // Increased SVG width to 400 and shifted group to translate(30,0) 
+      // so "-1.0" doesn't get cut off on the left side.
+      const legendDiv = d3.select("#chart").append("div").style("margin-top", "20px").style("margin-left", "50px");
+      const legendSvg = legendDiv.append("svg").attr("width", legendWidth + 100).attr("height", 60);
+
+      const legendG = legendSvg.append("g").attr("transform", "translate(30, 0)");
+
+      const defs = legendSvg.append("defs");
+      const gradient = defs.append("linearGradient").attr("id", "legend-gradient");
+      
+      gradient.append("stop").attr("offset", "0%").attr("stop-color", "#d7191c");
+      gradient.append("stop").attr("offset", "50%").attr("stop-color", "#f7f7f7");
+      gradient.append("stop").attr("offset", "100%").attr("stop-color", "#2c7bb6");
+
+      legendG.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", legendWidth)
+        .attr("height", legendHeight)
+        .style("fill", "url(#legend-gradient)");
+
+      const legendScale = d3.scaleLinear().domain([-1, 1]).range([0, legendWidth]);
+      
+      // Force specific ticks to ensure -1, 0, and 1 appear
+      const legendAxis = d3.axisBottom(legendScale)
+        .tickValues([-1, -0.5, 0, 0.5, 1])
+        .tickFormat(d3.format(".1f")); // Optional: nicely formats as -1.0, 0.0, 1.0
+
+      legendG.append("g")
+        .attr("transform", `translate(0, ${legendHeight})`)
+        .call(legendAxis);
+
+      legendG.append("text")
+        .attr("x", legendWidth / 2)
+        .attr("y", 45)
+        .style("text-anchor", "middle")
+        .style("font-size", "12px")
+        .text("Correlation Coefficient (r)");
+
+      d3.select("#showPos").on("change", updateChart);
+      d3.select("#showNeg").on("change", updateChart);
+
+      function updateChart() {
+        const showPos = d3.select("#showPos").property("checked");
+        const showNeg = d3.select("#showNeg").property("checked");
+
+        d3.selectAll(".cell-border")
+          .transition().duration(500)
+          .style("opacity", d => {
+            if (isNaN(d.Correlation)) return 0.1; 
+
+            if (d.Correlation > 0) {
+              return showPos ? 1 : 0.05; 
+            } else if (d.Correlation < 0) {
+              return showNeg ? 1 : 0.05;
+            } else {
+              return 1;
+            }
+          });
+      }
+
+    }).catch(err => console.error(err));
+  </script>
+</body>
+</html>
